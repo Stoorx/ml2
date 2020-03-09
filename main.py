@@ -79,21 +79,21 @@ if __name__ == '__main__':
     # Genetic descent
     smape_list_gr = []
     gr_iterations_list = []
-    for maxit in range(50, 1030, 50):
-        gr = GeneticRegressor.GeneticRegressor(feature_count,
-                                               start_population=500,
-                                               iterations_count=maxit,
-                                               validation_rate=0.005,
-                                               mutation_rate=0.07,
-                                               alive_rate=0.41,
-                                               normal_population=20)
-        gr.fit(x.copy(), y.copy())
-        gr_predicted = gr.predict(test_x.copy())
+
+    gr = GeneticRegressor.GeneticRegressor(feature_count,
+                                           start_population=15,
+                                           iterations_count=1001,
+                                           validation_rate=0.5,
+                                           mutation_rate=0.17,
+                                           alive_rate=0.31,
+                                           normal_population=5)
+    w = gr.fit(x.copy(), y.copy())
+    for wi in w:
+        gr_predicted = gr.predictW(test_x.copy(), wi)
         gr_smape = smape(gr_predicted, test_y)
         smape_list_gr.append(gr_smape)
-        gr_iterations_list.append(maxit)
-        print(f"Genetic descent with {maxit} iterations, SMAPE: {gr_smape :.6f}")
+        # print(f"Genetic descent with {maxit} iterations, SMAPE: {gr_smape :.6f}")
 
-    plt.plot(gr_iterations_list, smape_list_gr)
+    plt.plot(iterations_list, smape_list_gr)
 
     plt.show()

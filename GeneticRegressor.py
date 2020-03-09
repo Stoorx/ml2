@@ -64,11 +64,13 @@ class GeneticRegressor:
         return result
 
     def fit(self, X, y):
+        w_list = []
         for i in range(self.start_population):
             self.population.append(
                 np.random.uniform(low=-1.0, high=1.0, size=self.features_count + 1)
             )
         for iteration in range(self.iterations_count):
+            print(iteration)
             new_items = []
             for it in self.population:
                 new_items.append(
@@ -98,10 +100,28 @@ class GeneticRegressor:
                         calculated_errors[i][0]
                     )
 
+            if iteration % 50 == 0 and iteration != 0:
+                _calculated_errors = []
+                for item in self.population:
+                    _calculated_errors.append(
+                        (item,
+                         self._calculateMeanError(X, y, item))
+                    )
+                _calculated_errors.sort(key=lambda o: o[1])
+                w_list.append(_calculated_errors[0][0])
+
         self.w = self.population[0]
+        return w_list
 
     def predict(self, X):
         predict_list = []
         for x in X:
             predict_list.append(self._calculate(x, self.w))
+        return predict_list
+
+    @staticmethod
+    def predictW(X, w):
+        predict_list = []
+        for x in X:
+            predict_list.append(GeneticRegressor._calculate(x, w))
         return predict_list
