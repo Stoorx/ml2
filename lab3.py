@@ -79,7 +79,7 @@ if __name__ == '__main__':
     )
 
     kernels = ['linear', 'poly', 'rbf', 'sigmoid']
-    svc = SVC(kernel='sigmoid', C=1000)
+    svc = SVC(kernel='rbf', C=1000)
     # svc = SVC(kernel='sigmoid', C=1000)
     svc.fit(x, y)
     score = svc.score(x, y)
@@ -95,15 +95,9 @@ if __name__ == '__main__':
             )
         )
 
-    # summ = 0.0
-    # for i in heatmap:
-    #     summ += sum(i)
-    #
-    # summ /= len(heatmap)*len(heatmap[0])
-    summ = 0
     for i in range(len(heatmap)):
         for j in range(len(heatmap[i])):
-            heatmap[i][j] = (heatmap[i][j] - summ)
+            heatmap[i][j] = (heatmap[i][j] ** 0.9)
 
     # plt.axis([0, 25, 0, 7])
     plt.axis([-ax, ax, -ax, ax])
