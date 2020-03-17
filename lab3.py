@@ -10,8 +10,8 @@ def sigmoid(x):
 
 
 if __name__ == '__main__':
-    with open('geyser.csv', 'r') as file:
-        # with open('chips.csv', 'r') as file:
+    # with open('geyser.csv', 'r') as file:
+    with open('chips.csv', 'r') as file:
         lines = file.readlines()
 
     dataset = list(
@@ -79,27 +79,35 @@ if __name__ == '__main__':
     )
 
     kernels = ['linear', 'poly', 'rbf', 'sigmoid']
-    # svc = SVC(kernel='rbf', C=1000)
-    svc = SVC(kernel='linear', C=1000)
+    svc = SVC(kernel='sigmoid', C=1000)
+    # svc = SVC(kernel='sigmoid', C=1000)
     svc.fit(x, y)
     score = svc.score(x, y)
 
-    ax = 25
-    # ax = 1.2
+    ax = 1.2
     heatmap = []
+    # for i in range(0, 700, 1):
     for i in range(-100, 100, 1):
         heatmap.append(
-            list(
-                map(
-                    lambda e: sigmoid(e),
-                    svc.decision_function(
-                        [[ax * j / 100, ax * i / 100] for j in range(-100, 100, 1)]
-                    )
-                )
+            svc.decision_function(
+                # [[j / 100, i / 100] for j in range(0, 2500, 1)]
+                [[ax * j / 100, ax * i / 100] for j in range(-100, 100, 1)]
             )
         )
 
+    # summ = 0.0
+    # for i in heatmap:
+    #     summ += sum(i)
+    #
+    # summ /= len(heatmap)*len(heatmap[0])
+    summ = 0
+    for i in range(len(heatmap)):
+        for j in range(len(heatmap[i])):
+            heatmap[i][j] = (heatmap[i][j] - summ)
+
+    # plt.axis([0, 25, 0, 7])
     plt.axis([-ax, ax, -ax, ax])
+    # plt.imshow(heatmap, extent=(0, 25.0, 7, 0))
     plt.imshow(heatmap, extent=(-ax, ax, ax, -ax))
     plt.scatter(
         list(map(lambda e: e[0], xp)),
